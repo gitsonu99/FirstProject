@@ -4,7 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 import java.sql.*;
-public class LoginServlet extends GenericServlet  {
+public class LoginServlet extends HttpServlet  {
 	static Connection cn ;
 	static PreparedStatement ps;
 	static ResultSet rs;
@@ -16,24 +16,25 @@ public class LoginServlet extends GenericServlet  {
     	try {
     Class.forName("com.mysql.cj.jdbc.Driver");
     cn=DriverManager.getConnection("jdbc:mysql://localhost:3306/sonudb","root", "sonujhaSONU");
-    ps=cn.prepareStatement("select count(*) from sonudb.student where student_id =? and student_name=?");
+    ps=cn.prepareStatement("select count(*) from sonudb.Registration where UserName =? and Password=?");
     	}
     	catch(Exception  exception) {
     		exception.printStackTrace();
     	}
     }
    
-	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+	public void  doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String userName=request.getParameter("usr");
 		String password=request.getParameter("pwd");
+		int intpwd =Integer.parseInt(password);
 		response.setContentType("text/html");
 		PrintWriter out=response.getWriter();
 		out.println("<center><h1 style=color:green>Welcome to sonu software solution </h1><center><br>")	;
 		try {
 			
-		ps.setString(1,password );
-		ps.setString(2,userName);
+		ps.setInt(2,intpwd );
+		ps.setString(1,userName);
 		rs=ps.executeQuery();
 		rs.next();
 		int id =rs.getInt(1);
